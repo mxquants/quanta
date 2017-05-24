@@ -8,7 +8,7 @@ Created on Tue May 23 23:05:30 2017
 
 # %% define imports
 
-import data
+import quanta.data 
 
 # %% 
 print("\nCongrats, you are using a mxquant package.\n")
