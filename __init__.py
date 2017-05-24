@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue May 23 23:05:30 2017
-
+import quanta.data 
 @author: rhdzmota
 """
 
