@@ -77,7 +77,7 @@ def downloadPrices(stock_name=None,columns=["Timestamp","AdjPrices"]):
 # %% Calculate returns
 
 def getReturns(price_vector,_type="log"):
-    price_vector = np.asanyarray(price_vector)
+    price_vector = np.asarray(price_vector)
     if _type != "log":
         return price_vector[1:]/price_vector[:-1] - 1
     return np.log(price_vector[1:]/price_vector[:-1] )
