@@ -29,7 +29,7 @@ except:
     installReq()
     import quanta.data 
 
-del installReq()
+del installReq
 # %% 
 print("\nCongrats, you are using quanta beta-version by mxquants.\nContact developer @rhdzmota => rhdzmota@mxquants.com for any consern or further info.")
 
