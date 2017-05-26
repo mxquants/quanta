@@ -6,17 +6,22 @@ import quanta.data
 @author: rhdzmota
 """
 
-# %% define imports
+# %% setup 
+
+import subprocess
+bashCommand = """\
+bash quanta/setup.sh
+"""
 
 try:
-    import quanta.data 
-except:
-    import subprocess
-    bashCommand = """\
-    bash quanta/setup.sh
-    """
     output = subprocess.check_output(['bash','-c', bashCommand])
-    import quanta.data 
+except: 
+    print("Not to ruin your day... but there is something with the imports. Setup your environment correctly to use quanta.")
+    output = None 
+
+# %% define main imports
+
+import quanta.data 
 
 # %% 
 print("\nCongrats, you are using quanta beta-version by mxquants.\nContact developer @rhdzmota => rhdzmota@mxquants.com for any consern or further info.")
