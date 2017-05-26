@@ -11,23 +11,26 @@ Created on Tue May 23 19:10:19 2017
 import numpy as np
 import pandas as pd
 import datetime as dt
-
+import requests
 import matplotlib.pyplot as plt
 
-# %% 
+# %% variables 
+#global thisIsInsane
+
+# %% wake up heroku instance
 def wakeUpPlease():
     """
     Please wakeup!
     """
-    import requests
+    
     try:
         r = requests.get("https://mxquants-datarepo.herokuapp.com")
         return True 
     except:
         return False 
-    
-def downloadPrices(stock_name=None,columns=["Timestamp","AdjPrices"]):
-    import requests 
+
+# %% download prices func 
+def downloadPrices(stock_name=None,columns=["Timestamp","AdjPrices"]): 
     
     # check for type 
     if type(stock_name) != str :
@@ -82,11 +85,58 @@ def getReturns(price_vector,_type="log"):
         return price_vector[1:]/price_vector[:-1] - 1
     return np.log(price_vector[1:]/price_vector[:-1] )
     
+# %% Banxico Series
+
+def getAvailableBanxicoSeries():
+    #/BanxicoSeries?pwd=mxquants-rules&purpose=available_series
+    
+    # set url and parameters
+    url = "https://mxquants-datarepo.herokuapp.com/BanxicoSeries"
+    parameters = {"pwd":"mxquants-rules",
+                  "purpose":"available_series"}
+    
+    # make request 
+    r = requests.get(url,params=parameters).json()
+    return r.get("series_names") 
+
+def getBanxicoSeries(var,_type="df"):
+    # var tiie28
+    # /BanxicoSeries?pwd=mxquants-rules&purpose=download_data&variable_name=tiie28
+    
+    # set url and parameters
+    url = "https://mxquants-datarepo.herokuapp.com/BanxicoSeries"
+    parameters = {"pwd":"mxquants-rules",
+                  "purpose":"download_data",
+                  "variable_name":str(var)}
+    
+    # make request 
+    try:
+        r = requests.get(url,params=parameters).json()
+    except:
+        print("\nOkay, don't freak out. Something went wrong... May be your internet connection.")
+        return None
+    
+    # exec something insane. 
+    exec(r.get("fun"),globals())
+    
+    res = thisIsInsane(var,r.get("data"))
+    if "df" not in _type:
+        return eval(res)
+    
+    res = eval(res)
+    return pd.DataFrame(res["data"])
+    
     
 # %% Main function 
 
 def main():
-    wakeUpPlease()
+    try:
+        wakeUpPlease()
+        is_awake = True
+    except:
+        is_awake = False
+        
+    return is_awake
     
 # %% 
 
