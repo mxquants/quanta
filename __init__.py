@@ -19,7 +19,7 @@ except:
     import quanta.data 
 
 # %% 
-print("\nCongrats, you are using quanta mxquants package.\n")
+print("\nCongrats, you are using quanta beta-version by mxquants.\nContact developer @rhdzmota => rhdzmota@mxquants.com for any consern or further info.")
 
 # %% main function 
 def main():
