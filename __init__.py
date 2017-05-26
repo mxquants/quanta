@@ -8,21 +8,28 @@ import quanta.data
 
 # %% setup 
 
-import subprocess
-bashCommand = """\
-bash quanta/setup.sh
-"""
-
-try:
-    output = subprocess.check_output(['bash','-c', bashCommand])
-except: 
-    print("Not to ruin your day... but there is something with the imports. Setup your environment correctly to use quanta.")
-    output = None 
+def installReq():
+    import subprocess
+    bashCommand = """\
+    pip install -r quanta/requirements.txt
+    """
+    
+    try:
+        install_req = False
+        if install_req:
+            subprocess.check_output(['bash','-c', bashCommand])
+    except: 
+        print("Not to ruin your day... but there is something with the imports. Setup your environment correctly to use quanta.")
 
 # %% define main imports
 
-import quanta.data 
+try:
+    import quanta.data 
+except: 
+    installReq()
+    import quanta.data 
 
+del installReq()
 # %% 
 print("\nCongrats, you are using quanta beta-version by mxquants.\nContact developer @rhdzmota => rhdzmota@mxquants.com for any consern or further info.")
 
