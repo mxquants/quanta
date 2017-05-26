@@ -15,7 +15,7 @@ def installReq():
     """
     
     try:
-        install_req = False
+        install_req = True
         if install_req:
             subprocess.check_output(['bash','-c', bashCommand])
     except: 
