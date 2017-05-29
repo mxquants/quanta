@@ -123,8 +123,11 @@ def getBanxicoSeries(var,_type="df"):
     if "df" not in _type:
         return eval(res)
     
-    res = eval(res)
-    return pd.DataFrame(res["data"])
+    try:
+        res = eval(res)
+        return pd.DataFrame(res["data"])
+    except:
+        return res
     
     
 # %% Main function 
