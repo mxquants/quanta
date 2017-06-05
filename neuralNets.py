@@ -3,7 +3,8 @@
 Neural Networks
 Simple neural networks using tensorflow
 
-@author: rhdzmota
+@author: Rodrigo Hernández-Mota
+Contact: rhdzmota@mxquants.com
 """
 
 # Imports
