@@ -44,7 +44,7 @@ class mlpRegressor(object):
         return self.weights, self.bias
 
     def prediction(self, x, weights, biases):
-        """."""
+        """Prediction function."""
         layers = [x]
         for i in sorted(weights.keys()):
             layers.append(tf.nn.sigmoid(tf.add(tf.matmul(
