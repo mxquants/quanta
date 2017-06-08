@@ -48,6 +48,13 @@ train = mlp.train_results
 train = pd.DataFrame(train)
 test = pd.DataFrame(mlp.test(dataset=dataset))
 
+# estimate
+y_estimate = mlp.freeEval(dataset.norm_input_data.values)
+plt.plot(dataset.norm_input_data[0].values,
+         [np.asscalar(i) for i in dataset.norm_output_data.values], "b.")
+plt.plot(dataset.norm_input_data[0].values, y_estimate, "r.")
+plt.show()
+
 # visualize the training performance
 plt.plot(np.arange(_epochs), mlp.epoch_error)
 plt.title("MSE per epoch.")
