@@ -1,29 +1,49 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Neural Networks
+"""Neural Networks.
+
 Simple neural networks using tensorflow
-
 @author: Rodrigo Hernández-Mota
-Contact: rhdzmota@mxquants.com
+rhdzmota@mxquants.com
 """
 
-# Imports
+
 import numpy as np
 import tensorflow as tf
 
 
-class mlpRegressor(object):
-    """MultiLayer Perceptron Regressor using tensorflow."""
+class mlpBase(object):
+    """Base guideline for MLPs."""
 
-    def __init__(self, hidden_layers=[1], activation_function="sigmoid"):
+    def __init__(self, hidden_layers=[1], activation_function=[""]):
         """Initialize mlp Regressor."""
-        self.hidden_layers = list(hidden_layers)
-        self.activation = self._activation(activation_function)
+        # arguments to lists
+        hidden_layers_list = [hidden_layers] if type(hidden_layers) == str \
+            else list(hidden_layers)
+        activ_funcs_list = [activation_function] if type(activation_function) \
+            == str else list(activation_function)
+
+        self.hidden_layers = hidden_layers_list
+        if len(hidden_layers_list) == len(activ_funcs_list):
+            self.activation = self._activation(activation_function) + \
+                                            self._lastActivation(self._type)
+        elif len(hidden_layers_list) > len(activ_funcs_list):
+            new_activ_func = []
+            for i in range(len(hidden_layers_list)):
+                new_activ_func.append("sigmoid")
+            self.activation = new_activ_func + self._lastActivation(self._type)
+        else:
+            print("Legnth mismatch among hidden_layers and activation_" +
+                  "function.")
+
+    def _lastActivation(self, _type):
+        return [""] if "reg" in _type else ["sigmoid"]
 
     def _activation(self, _string):
         functions = {"sigmoid": tf.nn.sigmoid,
                      "relu": tf.nn.relu,
-                     "softmax": tf.nn.softmax}
+                     "softmax": tf.nn.softmax,
+                     "": lambda x: x}
         return functions.get(_string)
 
     def _initilizeModel(self, n_inputs, n_outputs=1):
@@ -46,13 +66,21 @@ class mlpRegressor(object):
     def prediction(self, x, weights, biases):
         """Prediction function."""
         layers = [x]
-        for i in sorted(weights.keys()):
-            layers.append(tf.nn.sigmoid(tf.add(tf.matmul(
-                                                         layers[-1],
-                                                         weights[i]),
-                                               biases[i])))
+        for i, z in zip(sorted(weights.keys()), self.activation):
+            phi = self._activation(z)
+            layers.append(phi(tf.add(tf.matmul(
+                                                layers[-1],
+                                                weights[i]),
+                                     biases[i])))
         self.layers = layers
         return layers[-1]
+
+
+class mlpRegressor(mlpBase):
+    """MultiLayer Perceptron Regressor using tensorflow."""
+
+    # Variables
+    _type = "regressor"
 
     def cost(self, pred, y):
         """Cost function."""
