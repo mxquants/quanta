@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue May 30 16:42:09 2017
-Simple neural networks using tensorflow
+"""Dataset Handler Module.
 
+Provide function and classes to handle datasets for neuralNets.py module.
 @author: Rodrigo Hernández-Mota
-Contact: rhdzmota@mxquants.com
+rhdzmota@mxquants.com
 """
 
 # Imports
