@@ -25,7 +25,8 @@ class mlpBase(object):
 
         self.hidden_layers = hidden_layers_list
         if len(hidden_layers_list) == len(activ_funcs_list):
-            self.activation = self._activation(activation_function) + \
+            self.activation = [self._activation(i)
+                               for i in activation_function] + \
                                             self._lastActivation(self._type)
         elif len(hidden_layers_list) > len(activ_funcs_list):
             new_activ_func = []
