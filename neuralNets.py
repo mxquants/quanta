@@ -15,7 +15,7 @@ import tensorflow as tf
 class mlpBase(object):
     """Base guideline for MLPs."""
 
-    def __init__(self, hidden_layers=[1], activation_function=[""]):
+    def __init__(self, hidden_layers, activation_function=[]):
         """Initialize mlp Regressor."""
         # arguments to lists
         hidden_layers_list = [hidden_layers] if type(hidden_layers) == str \
