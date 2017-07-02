@@ -97,11 +97,12 @@ class Dataset(object):
                     y_data.iloc[_index[_split:]].values)
         return {'test': test_set, 'train': train_set}
 
-    def nextBatch(self, batch_size=None):
+    def nextBatch(self, batch_size=None, adjust=True):
         """Generate next data batch."""
         n = len(self.train[0])
         if not batch_size:
-            batch_size = np.int(n*0.2) if n > 500 else 100
+            adj_size = int(0.7*n) if adjust else 100
+            batch_size = np.int(n*0.2) if n > 500 else adj_size
         if batch_size > n:
             print("Error: No enought data (min. batch_size = 100).")
             return None
