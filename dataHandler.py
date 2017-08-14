@@ -15,8 +15,9 @@ import pandas as pd
 class Dataset(object):
     """Dataset class for handling dataset normalization and splits."""
 
-    def __init__(self, input_data, output_data, normalize=None, datatypes={}):
+    def __init__(self, input_data, output_data, normalize=None, datatypes={}, apply={}):
         """Dataset class for handling dataset normalization and splits."""
+        self.input_cols = input_data.columns
         self.input_data = input_data.values if self._isPandasOrSeries(
                                                 input_data) else input_data
         self.output_data = output_data.values if self._isPandasOrSeries(
@@ -47,7 +48,7 @@ class Dataset(object):
                 self.norm_output_data, self.min_y, self.max_y = \
                     self._normalizeWithMinMax(df_output,
                                               datatypes["output_data"])
-        datasets = self._splitDataset(0.7)
+        datasets = self._splitDataset(0.7, apply)
         self.test, self.train = datasets["test"], datasets["train"]
 
     def _normalizeWithMean(self, df, typelist):
@@ -79,7 +80,7 @@ class Dataset(object):
         return np.asarray([[i] for i in data]) if shape == 1 \
             else np.asarray(data)
 
-    def _splitDataset(self, cut=0.7):
+    def _splitDataset(self, cut=0.7, apply={}):
         # Length and random index
         n = len(self.input_data)
         _index = np.arange(n)
@@ -89,6 +90,11 @@ class Dataset(object):
         y_data = self.norm_output_data if self.normalized else self.output_data
         # convert to dataframe
         x_data, y_data = pd.DataFrame(x_data), pd.DataFrame(y_data)
+        # apply extra transformations
+        if apply:
+            x_data.columns = self.input_cols
+            for col in apply:
+                x_data[col] = list(map(apply[col], x_data[col].values))
         # separate into test and train
         _split = np.int(np.asscalar(np.round(n*cut)))
         train_set = (x_data.iloc[_index[:_split]].values,
