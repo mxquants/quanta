@@ -31,7 +31,7 @@ class mlpBase(object):
         elif len(hidden_layers_list) > len(activ_funcs_list):
             new_activ_func = []
             for i in range(len(hidden_layers_list)):
-                new_activ_func.append("sigmoid")
+                new_activ_func.append("relu")
             self.activation = new_activ_func + self._lastActivation(self._type)
         else:
             print("Legnth mismatch among hidden_layers and activation_" +
