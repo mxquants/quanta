@@ -48,8 +48,8 @@ class Dataset(object):
                 self.norm_output_data, self.min_y, self.max_y = \
                     self._normalizeWithMinMax(df_output,
                                               datatypes["output_data"])
-        datasets = self._splitDataset(0.7, apply)
-        self.test, self.train = datasets["test"], datasets["train"]
+        datasets = self._splitDataset(0.7, 0.5, apply)
+        self.test, self.train, self.validate = datasets["test"], datasets["train"], datasets["validate"]
 
     def _normalizeWithMean(self, df, typelist):
         """Normalize data using (x-mu)/sigma."""
@@ -80,7 +80,7 @@ class Dataset(object):
         return np.asarray([[i] for i in data]) if shape == 1 \
             else np.asarray(data)
 
-    def _splitDataset(self, cut=0.7, apply={}):
+    def _splitDataset(self, cut=0.7, validate_cut=0.5, apply={}):
         # Length and random index
         n = len(self.input_data)
         _index = np.arange(n)
@@ -97,11 +97,14 @@ class Dataset(object):
                 x_data[col] = list(map(apply[col], x_data[col].values))
         # separate into test and train
         _split = np.int(np.asscalar(np.round(n*cut)))
+        second_split = _split + np.int(np.asscalar(np.round((n-_split)*validate_cut)))
         train_set = (x_data.iloc[_index[:_split]].values,
                      y_data.iloc[_index[:_split]].values)
-        test_set = (x_data.iloc[_index[_split:]].values,
-                    y_data.iloc[_index[_split:]].values)
-        return {'test': test_set, 'train': train_set}
+        test_set = (x_data.iloc[_index[_split:second_split]].values,
+                    y_data.iloc[_index[_split:second_split]].values)
+        validate_set = (x_data.iloc[_index[second_split:]].values,
+                        y_data.iloc[_index[second_split:]].values)
+        return {'test': test_set, 'train': train_set, 'validate': validate_set}
 
     def nextBatch(self, batch_size=None, adjust=True):
         """Generate next data batch."""
